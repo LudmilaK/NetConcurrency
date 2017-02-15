@@ -10,8 +10,9 @@ import java.net.Socket;
 public class Server {
     public static void main(String[] args) {
         ServerSocket serverSocket = null;
+        int port = Integer.valueOf(args[0]);
         try {
-            serverSocket = new ServerSocket(2000); //поднимаем сервер (открываем порт)
+            serverSocket = new ServerSocket(port); //поднимаем сервер (открываем порт)
             Socket socket = serverSocket.accept(); //accept - возвращает экземпляр клиента, который подключился к серверу
             InputStream socketInputStream = socket.getInputStream(); // байтовый поток
             DataInputStream dataInputStream = new DataInputStream(socketInputStream);

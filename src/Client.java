@@ -11,18 +11,26 @@ public class Client {
         try {
             Socket socket = new Socket(host, port); // подключение к серверу по локальному хосту
             OutputStream socketOutputStream = socket.getOutputStream();
+            InputStream in = socket.getInputStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
             DataOutputStream dataOutputStream = new DataOutputStream(socketOutputStream);
+            DataInputStream dataInStream = new DataInputStream(in);
             String message = "";
-            while (true) {
-                System.out.print("Отправить: ");
-                message = bufferedReader.readLine();
-                dataOutputStream.writeUTF(message);
-                System.out.println("Отправлено!");
-                dataOutputStream.flush();
-                if(message.equals("bye")){
-                    socket.close();
-                    break;
+            message = dataInStream.readUTF();
+            if (message.equals("Отказано в доступе!")) {
+                System.out.println(message);
+                socket.close();
+            } else {
+                while (true) {
+                    System.out.print("Отправить: ");
+                    message = bufferedReader.readLine();
+                    dataOutputStream.writeUTF(message);
+                    System.out.println("Отправлено!");
+                    dataOutputStream.flush();
+                    if (message.equals("bye")) {
+                        socket.close();
+                        break;
+                    }
                 }
             }
 

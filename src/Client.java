@@ -6,9 +6,10 @@ import java.net.Socket;
  */
 public class Client {
     public static void main(String[] args) {
+        int port = 0;
         String host = args[1];
-        int port = Integer.valueOf(args[0]);
         try {
+            port = Integer.valueOf(args[0]);
             Socket socket = new Socket(host, port); // подключение к серверу по локальному хосту
             OutputStream socketOutputStream = socket.getOutputStream();
             InputStream in = socket.getInputStream();
@@ -35,7 +36,11 @@ public class Client {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Сервер не доступен!");
+        }
+        catch (NumberFormatException nfe){
+            System.out.println("Неверный формат номера порта!");
         }
     }
+
 }

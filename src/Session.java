@@ -1,6 +1,6 @@
 import java.io.*;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
+
 
 /**
  * Created by Людмила on 17.02.2017.
@@ -9,7 +9,12 @@ public class Session implements Runnable {
 
     Socket socket_;
     int countMax_;
-    public static volatile int count_ = 0;
+    public static int count_ = 0;
+
+    public void closeSession(){
+        count_--;
+        System.out.println("Количество подключенных клиентов: " + Session.count_);
+    }
 
     public Session() {
 
@@ -22,8 +27,9 @@ public class Session implements Runnable {
 
     public static void main(String[] args) {
         ServerSocket serverSocket = null;
-        int port = Integer.valueOf(args[0]);
+        int port = 0;
         try {
+            port = Integer.valueOf(args[0]);
             serverSocket = new ServerSocket(port);
             while (true) {
                 Socket socket = serverSocket.accept();
@@ -36,13 +42,19 @@ public class Session implements Runnable {
                     thread.start();
                     Session.count_++;
                     System.out.println("Количество подключенных клиентов: " + Session.count_);
-                }
-                else{
+                } else {
                     dataOutStream.writeUTF("Отказано в доступе!");
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+        catch (BindException e) {
+            System.out.println("Порт уже занят!");
+        }
+        catch (IOException e) {
+            System.out.println("Невозможно принять клиента!");
+        }
+        catch (NumberFormatException nfe) {
+            System.out.println("Неверный формат номера порта!");
         }
 
     }
@@ -65,8 +77,9 @@ public class Session implements Runnable {
 
             }
         } catch (IOException e) {
-            count_--;
-            System.out.println("Количество подключенных клиентов: " + Session.count_);
+            System.out.println("Один из клиентов отключен!");
+        } finally {
+            closeSession();
         }
     }
 }

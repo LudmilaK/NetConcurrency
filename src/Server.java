@@ -29,7 +29,7 @@ public class Server {
             } catch (IOException e) {
                 System.out.println("Порт занят");
             }
-
+            toWhile:
             while (true) {
                 Socket socket = null;
                 try {
@@ -45,19 +45,21 @@ public class Server {
                     System.out.println("Ошибка получения выходного потока!");
                 }
                 DataOutputStream dataOutStream = new DataOutputStream(out);
-                try {
-                    dataOutStream.writeUTF("Доступ разрешен!");
-                } catch (IOException e) {
-                    System.out.println("Связь с клиентом потеряна!");
-                }
-                Thread thread = new Thread(session);
-                thread.start();
+
                 synchronized (lock_) {
-                    count_++;
-                    System.out.println("Количество подключенных клиентов: " + count_);
                     if (count_ == countMax_) {
                         lock_.wait();
+                        continue toWhile;
                     }
+                    count_++;
+                    try {
+                        dataOutStream.writeUTF("Доступ разрешен!");
+                    } catch (IOException e) {
+                        System.out.println("Связь с клиентом потеряна!");
+                    }
+                    System.out.println("Количество подключенных клиентов: " + count_);
+                    Thread thread = new Thread(session);
+                    thread.start();
                 }
 
             }

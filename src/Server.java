@@ -29,7 +29,6 @@ public class Server {
             } catch (IOException e) {
                 System.out.println("Порт занят");
             }
-            toWhile:
             while (true) {
                 Socket socket = null;
                 try {
@@ -47,9 +46,8 @@ public class Server {
                 DataOutputStream dataOutStream = new DataOutputStream(out);
 
                 synchronized (lock_) {
-                    if (count_ == countMax_) {
+                    while (count_ >= countMax_) {
                         lock_.wait();
-                        continue toWhile;
                     }
                     count_++;
                     try {

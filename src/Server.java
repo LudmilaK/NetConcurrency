@@ -8,7 +8,7 @@ import java.net.Socket;
 public class Server {
 
     private final static Object lock_ = new Object();
-    static int countMax_ = 2;
+    static int countMax_ = 3;
     public static int count_ = 0;
 
     public static void closeSession() {
@@ -20,6 +20,8 @@ public class Server {
     }
 
     public static void main(String[] args) {
+        Channel channel = new Channel(3);
+        Dispatcher dispatcher = new Dispatcher(channel);
         ServerSocket serverSocket = null;
         int port = 0;
         try {
@@ -46,6 +48,8 @@ public class Server {
                 DataOutputStream dataOutStream = new DataOutputStream(out);
 
                 synchronized (lock_) {
+
+                    channel.put(session);
                     while (count_ >= countMax_) {
                         lock_.wait();
                     }
@@ -56,7 +60,8 @@ public class Server {
                         System.out.println("Связь с клиентом потеряна!");
                     }
                     System.out.println("Количество подключенных клиентов: " + count_);
-                    Thread thread = new Thread(session);
+
+                    Thread thread = new Thread(dispatcher);
                     thread.start();
                 }
 

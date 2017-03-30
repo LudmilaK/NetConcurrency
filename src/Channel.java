@@ -7,7 +7,7 @@ public class Channel {
     //В канале все подключения
     // Кладем сессию
 
-    private final LinkedList<Runnable> linkedList = new LinkedList<>();
+    private final LinkedList<Object> linkedList = new LinkedList<>();
     private final static Object lock = new Object();
     private final int maxCounter;
 
@@ -29,7 +29,10 @@ public class Channel {
         }
 
     }
-    //В диспетчере
+
+    public int getSize(){
+        return linkedList.size();
+    }
 
     Runnable take() {
         synchronized (lock) {
@@ -41,7 +44,7 @@ public class Channel {
                 }
             }
             lock.notifyAll();
-            return linkedList.removeFirst();
+            return (Runnable) linkedList.removeFirst();
         }
     }
 }

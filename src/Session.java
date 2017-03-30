@@ -34,7 +34,7 @@ public class Session implements Runnable {
         } catch (IOException e) {
             System.out.println("Один из клиентов отключен!");
         } finally {
-            Server.closeSession();
+            Host.close();
         }
     }
 }

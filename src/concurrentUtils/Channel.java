@@ -1,3 +1,5 @@
+package concurrentUtils;
+
 import java.util.LinkedList;
 
 /**
@@ -15,7 +17,7 @@ public class Channel {
         maxCounter = max;
     }
 
-    void put(Runnable x) {
+    public void put(Runnable x) {
         synchronized (lock) {
             while (maxCounter <= linkedList.size()) {
                 try {
@@ -31,7 +33,9 @@ public class Channel {
     }
 
     public int getSize(){
-        return linkedList.size();
+        synchronized (lock){
+            return linkedList.size();
+        }
     }
 
     Runnable take() {

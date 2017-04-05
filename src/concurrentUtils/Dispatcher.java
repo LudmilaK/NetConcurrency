@@ -1,16 +1,21 @@
+package concurrentUtils;
+
+import concurrentUtils.Channel;
+import concurrentUtils.ThreadPool;
+
 /**
  * Created by Людмила on 17.03.2017.
  */
 public class Dispatcher implements Runnable {
     public static Channel channel_;
-    boolean isActive;
+    //boolean isActive;
     Thread thread;
     ThreadPool threadPool;
 
     public Dispatcher(Channel ch, ThreadPool th) {
         channel_ = ch;
         threadPool = th;
-        isActive =false;
+      //  isActive =false;
     }
 
     public void run() {
@@ -23,7 +28,7 @@ public class Dispatcher implements Runnable {
     public void start() {
         thread = new Thread((Runnable) this);
         thread.start();
-        isActive = true;
+      //  isActive = true;
     }
 }
 

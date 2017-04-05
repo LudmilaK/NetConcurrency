@@ -1,3 +1,7 @@
+package netUtils;
+
+import netUtils.Host;
+
 import java.io.*;
 import java.net.*;
 
@@ -8,10 +12,6 @@ import java.net.*;
 public class Session implements Runnable {
 
     static Socket socket_;
-
-
-    public Session() {
-    }
 
     public Session(Socket socket) {
         this.socket_ = socket;
@@ -29,12 +29,9 @@ public class Session implements Runnable {
                 if (message.equals("bye")) {
                     break;
                 }
-
             }
         } catch (IOException e) {
             System.out.println("Один из клиентов отключен!");
-        } finally {
-            Host.close();
         }
     }
 }

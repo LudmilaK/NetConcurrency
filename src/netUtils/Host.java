@@ -1,3 +1,7 @@
+package netUtils;
+
+import concurrentUtils.Channel;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -8,9 +12,9 @@ import java.net.Socket;
  * Created by Людмила on 29.03.2017.
  */
 public class Host implements Runnable {
-    static ServerSocket serverSocket;
-    Channel channel;
-    Thread thread;
+    private static ServerSocket serverSocket;
+    private Channel channel;
+    private Thread thread;
 
     public Host(int port, Channel channel) {
         try {
@@ -52,13 +56,5 @@ public class Host implements Runnable {
     public void start() {
         thread = new Thread(this);
         thread.start();
-    }
-
-    public static void close() {
-        try {
-            serverSocket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

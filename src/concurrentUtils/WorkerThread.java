@@ -1,7 +1,4 @@
 package concurrentUtils;
-
-import concurrentUtils.ThreadPool;
-
 /**
  * Created by Людмила on 24.03.2017.
  */

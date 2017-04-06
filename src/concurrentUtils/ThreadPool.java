@@ -1,7 +1,4 @@
 package concurrentUtils;
-
-import concurrentUtils.Channel;
-
 import java.util.LinkedList;
 
 /**

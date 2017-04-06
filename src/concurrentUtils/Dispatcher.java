@@ -1,8 +1,4 @@
 package concurrentUtils;
-
-import concurrentUtils.Channel;
-import concurrentUtils.ThreadPool;
-
 /**
  * Created by Людмила on 17.03.2017.
  */

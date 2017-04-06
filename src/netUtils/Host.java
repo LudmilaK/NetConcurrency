@@ -15,8 +15,9 @@ public class Host implements Runnable {
     private static ServerSocket serverSocket;
     private Channel channel;
     private Thread thread;
+    private MessageHandlerFactory messageHandlerFactory;
 
-    public Host(int port, Channel channel) {
+    public Host(int port, Channel channel, MessageHandlerFactory messageHandlerFactory) {
         try {
             serverSocket = new ServerSocket(port);
         } catch (NumberFormatException nfe) {
@@ -25,6 +26,7 @@ public class Host implements Runnable {
             e.printStackTrace();
         }
         this.channel = channel;
+        this.messageHandlerFactory = messageHandlerFactory;
     }
 
     @Override
@@ -36,7 +38,8 @@ public class Host implements Runnable {
             } catch (IOException e) {
                 System.out.println("Клиент не принят!");
             }
-            Session session = new Session(socket);
+            MessageHandler messageHandler = messageHandlerFactory.create();
+            Session session = new Session(socket, messageHandler);
             OutputStream out = null; // байтовый поток
             try {
                 out = socket.getOutputStream();

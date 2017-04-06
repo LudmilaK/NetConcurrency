@@ -1,8 +1,9 @@
+package app;
+
 import concurrentUtils.Channel;
 import concurrentUtils.Dispatcher;
 import concurrentUtils.ThreadPool;
 import netUtils.Host;
-import netUtils.MessageHandler;
 import netUtils.MessageHandlerFactory;
 
 /**
@@ -14,20 +15,29 @@ public class Server {
 
     // может запускать несколько хостов
     public static void main(String[] args) {
+        Class classMessageHandlerFactory = null;
+        MessageHandlerFactory messageHandlerFactory = null;
+        try {
+            classMessageHandlerFactory = Class.forName("app.PrintMessageHandlerFactory");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            messageHandlerFactory = (MessageHandlerFactory) classMessageHandlerFactory.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
         Channel channel = new Channel(3);
         int port = 0;
         port = Integer.valueOf(args[0]);
-        Host host = new Host(port, channel);
+        Host host = new Host(port, channel, messageHandlerFactory);
         host.start();
         ThreadPool threadPool = new ThreadPool(3);
         Dispatcher dispatcher = new Dispatcher(channel, threadPool);
         dispatcher.start();
     }
-
-  /*  MessageHandlerFactory mHF = null;
-    Class classFactory = Class.forName("app.PrintMessageFactory");
-
-    mHF = (MessageHandler) classFactory.newInstance();*/
 }
 
 // фабрику прокидываем в хост, через аргумент конструктора хоста передаем реализацию фабрики.

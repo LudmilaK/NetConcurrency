@@ -18,7 +18,7 @@ public class Server {
         Class classMessageHandlerFactory = null;
         MessageHandlerFactory messageHandlerFactory = null;
         try {
-            classMessageHandlerFactory = Class.forName("app.PrintMessageHandlerFactory");
+            classMessageHandlerFactory = Class.forName("app.PrintMessageHandlerFactory"); // рефлексия
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }

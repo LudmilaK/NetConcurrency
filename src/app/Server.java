@@ -37,6 +37,12 @@ public class Server {
         ThreadPool threadPool = new ThreadPool(3);
         Dispatcher dispatcher = new Dispatcher(channel, threadPool);
         dispatcher.start();
+        // Нужно остановить Dispatcher и Host, оповестить и остановить всех клиентов (остановить ThreadPool)
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> { // создаем инстанс рантайма (getRuntime());
+            host.stop();
+            dispatcher.stop();
+            threadPool.stop();
+        }));
     }
 }
 

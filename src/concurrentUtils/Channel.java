@@ -22,7 +22,7 @@ public class Channel {
             while (maxCounter <= linkedList.size()) {
                 try {
                     lock.wait();
-                } catch (InterruptedException e) {
+                } catch (InterruptedException e) { // выбрасывается блокирующими методами
                     e.printStackTrace();
                 }
             }
@@ -38,7 +38,7 @@ public class Channel {
         }
     }
 
-    Runnable take() {
+    Stoppable take() {
         synchronized (lock) {
             while (linkedList.isEmpty()) {
                 try {
@@ -48,7 +48,7 @@ public class Channel {
                 }
             }
             lock.notifyAll();
-            return (Runnable) linkedList.removeFirst();
+            return (Stoppable) linkedList.removeFirst();
         }
     }
 }

@@ -1,6 +1,7 @@
 package netUtils;
 
 import concurrentUtils.Channel;
+import concurrentUtils.Stoppable;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -11,8 +12,9 @@ import java.net.Socket;
 /**
  * Created by Людмила on 29.03.2017.
  */
-public class Host implements Runnable {
+public class Host implements Stoppable {
     private static ServerSocket serverSocket;
+    volatile boolean isActive;
     private Channel channel;
     private Thread thread;
     private MessageHandlerFactory messageHandlerFactory;
@@ -27,11 +29,12 @@ public class Host implements Runnable {
         }
         this.channel = channel;
         this.messageHandlerFactory = messageHandlerFactory;
+        isActive = true;
     }
 
     @Override
     public void run() {
-        while (true) {
+        while (isActive) {
             Socket socket = null;
             try {
                 socket = serverSocket.accept();
@@ -59,5 +62,18 @@ public class Host implements Runnable {
     public void start() {
         thread = new Thread(this);
         thread.start();
+    }
+
+    @Override
+    public void stop() {
+        if(isActive){
+            isActive = false;
+            try {
+                serverSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        // закрываем серверсокет и пишем сообщение, что сервер остановился
     }
 }

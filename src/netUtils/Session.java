@@ -1,6 +1,9 @@
 package netUtils;
 
+import concurrentUtils.Stoppable;
+
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.*;
@@ -9,7 +12,7 @@ import java.net.*;
 /**
  * Created by Людмила on 17.02.2017.
  */
-public class Session implements Runnable {
+public class Session implements Stoppable {
 
     Socket socket_;
     MessageHandler messageHandler;
@@ -35,6 +38,29 @@ public class Session implements Runnable {
             }
         } catch (IOException e) {
             System.out.println("Один из клиентов отключен!");
+        }
+
+    }
+
+    @Override
+    public void stop() {
+        if(socket_ != null){
+            DataOutputStream dataOutputStream = null;
+            try {
+                dataOutputStream = new DataOutputStream(socket_.getOutputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                dataOutputStream.writeUTF("Socket is closed");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                socket_.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
     }

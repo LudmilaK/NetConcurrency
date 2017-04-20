@@ -23,7 +23,7 @@ public class ThreadPool {
     // пока размер не равен maxSize, создаем новый workerThread
     // нужна синхронизация
 
-    public void execute(Runnable task) {
+    public void execute(Stoppable task) {
         synchronized (lock) {
             if (freeWorkers.getSize() == 0) {
                 if (maxSize > allWorkers.size()) {
@@ -39,5 +39,12 @@ public class ThreadPool {
 
     public void onTaskCompleted(WorkerThread workerThread) {
         freeWorkers.put((Runnable) workerThread);
+    }
+
+    // остановить всех воркерсредов
+    public  void stop(){
+        for(int i = 0; i < allWorkers.size(); i++){
+            allWorkers.get(i).stop();
+        }
     }
 }
